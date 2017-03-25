@@ -38,7 +38,7 @@ const validator = (message, fun) => {
 }
 
 const isObj = value => value !== null && typeof value === 'object';
-const existsProperty = name => obj => obj[name] !== undefined;
+const existsProperty = name => obj => isObj(obj) && obj[name] !== undefined;
 const existPropertyAndCheckNum = name => obj => existsProperty(name)(obj) && Number.isFinite(obj[name]);
 
 const checkObj = checker(validator('오브젝트가 아닙니다.', isObj)
