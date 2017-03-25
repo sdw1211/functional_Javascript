@@ -23,12 +23,12 @@ const safeSum = args => calculater(Number.isFinite, sumArr, args);
 const safeMultiply = args => calculater(Number.isFinite, multiArr, args);
 
 const checker = (...validators) => obj => {
-    validators = [[], ...validators];
+    //validators = [[], ...validators];
 
     return validators.reduce((errs, check) => {
         if (check(obj)) return errs;
         else return [...errs, check.message];
-    })
+    }, []);
 };
 const validator = (message, fun) => {
     const f = (...args) => fun.apply(fun, args);
