@@ -2,7 +2,7 @@ const sum = (...args) => args.reduce((pre, cur) => pre + cur);
 const sumArr = array => array.reduce((pre, cur) => pre + cur);
 const multiArr = array => array.reduce((pre, cur) => pre * cur);
 
-const calculater  = (checker, calculate, args)  => {
+const calculator  = (checker, calculate, args)  => {
     const fixedState = [];
 
     if (!Array.isArray(args)) {
@@ -19,8 +19,8 @@ const calculater  = (checker, calculate, args)  => {
 };
 
 
-const safeSum = args => calculater(Number.isFinite, sumArr, args);
-const safeMultiply = args => calculater(Number.isFinite, multiArr, args);
+const safeSum = args => calculator(Number.isFinite, sumArr, args);
+const safeMultiply = args => calculator(Number.isFinite, multiArr, args);
 
 const checker = (...validators) => obj => {
     //validators = [[], ...validators];
@@ -37,7 +37,7 @@ const validator = (message, fun) => {
     return f;
 }
 
-const isObj = value => value !== null && typeof value === 'object';
+const isObj = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 const existsProperty = name => obj => isObj(obj) && obj[name] !== undefined;
 const existPropertyAndCheckNum = name => obj => existsProperty(name)(obj) && Number.isFinite(obj[name]);
 
