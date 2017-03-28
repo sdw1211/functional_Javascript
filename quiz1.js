@@ -1,26 +1,25 @@
-const sum = (...args) => args.reduce((pre, cur) => pre + cur);
-const sumArr = array => array.reduce((pre, cur) => pre + cur);
-const multiArr = array => array.reduce((pre, cur) => pre * cur);
+const sum = (value1, value2) => value1 + value2;
+const multi = (value1, value2) => value1 * value2;
 
-const calculator  = (checker, calculate, args)  => {
-    const fixedState = [];
+const sumWithArr = array => array.reduce(sum);
+const multiWithArr = array => array.reduce(multi);
 
+const sumWithArgs = (...args) => sumWithArr(args);
+const calculateSafely = (checker, calculate) => (pre, next) => checker(next) ? calculate(pre, next) : pre;
+const getInteger = value => Number.isInteger(value) ? value : 0;
+const zero = getInteger(0);
+const one = getInteger(1);
+
+const calculator  = (calculate, args, init = zero)  => {
     if (!Array.isArray(args)) {
-        return 0;
+        return zero;
     }
 
-    args.forEach(value => {
-        if(checker(value)) {
-            fixedState.push(value);
-        }
-    });
-
-    return calculate(fixedState);
+    return args.reduce(calculate, init);
 };
 
-
-const safeSum = args => calculator(Number.isFinite, sumArr, args);
-const safeMultiply = args => calculator(Number.isFinite, multiArr, args);
+const safeSum = args => calculator(calculateSafely(Number.isFinite, sum), args);
+const safeMultiply = args => calculator(calculateSafely(Number.isFinite, multi), args, one);
 
 const checker = (...validators) => obj => {
     //validators = [[], ...validators];
@@ -45,8 +44,8 @@ const checkObj = checker(validator('오브젝트가 아닙니다.', isObj)
     , validator('특정 프로퍼티가 존재하지 않습니다.', existsProperty('name'))
     , validator('특정 프로퍼티 값이 숫자가 아닙니다.', existPropertyAndCheckNum('aaaa')));
 
-console.log(sum(1,2,34,5,6));
-console.log(sumArr([1,2,3,4,5,6]));
+console.log(sumWithArgs(1,2,34,5,6));
+console.log(sumWithArr([1,2,3,4,5,6]));
 console.log(safeSum([1,null,2,3,4,5]));
 console.log(safeMultiply([1,null,2,3,4,5]));
 console.log(checkObj({"name": 1234, "aaaa": 1234}));
