@@ -21,9 +21,23 @@ const calculator  = (calculate, args, init = zero)  => {
 const safeSum = args => calculator(calculateSafely(Number.isFinite, sum), args);
 const safeMultiply = args => calculator(calculateSafely(Number.isFinite, multi), args, one);
 
-const checker = (...validators) => obj => {
-    //validators = [[], ...validators];
+const isNull = obj => obj === null;
+const isNotNull = obj => !isNull(obj);
+const isNotArray = obj => !Array.isArray(obj);
 
+const checkType = type => obj => typeof obj === type;
+
+const and = (...validators) => obj => {
+    validators.forEach(validator => {
+        if (!validator(obj)) {
+            return false;
+        }
+    });
+
+    return true;
+};
+
+const checker = (...validators) => obj => {
     return validators.reduce((errs, check) => {
         if (check(obj)) return errs;
         else return [...errs, check.message];
@@ -36,9 +50,9 @@ const validator = (message, fun) => {
     return f;
 }
 
-const isObj = value => value !== null && typeof value === 'object' && !Array.isArray(value);
-const existsProperty = name => obj => isObj(obj) && obj[name] !== undefined;
-const existPropertyAndCheckNum = name => obj => existsProperty(name)(obj) && Number.isFinite(obj[name]);
+const isObj = value => and(isNotNull, checkType('object'), isNotArray);
+const existsProperty = name => obj => and(isObj, obj =>  obj[name] !== undefined);
+const existPropertyAndCheckNum = name => obj =>  and(existsProperty(name), obj => Number.isFinite(obj[name]));
 
 const checkObj = checker(validator('오브젝트가 아닙니다.', isObj)
     , validator('특정 프로퍼티가 존재하지 않습니다.', existsProperty('name'))
