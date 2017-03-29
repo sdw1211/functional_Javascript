@@ -10,16 +10,16 @@ const getInteger = value => Number.isInteger(value) ? value : 0;
 const zero = getInteger(0);
 const one = getInteger(1);
 
-const calculator  = (calculate, args, init = zero)  => {
-    if (!Array.isArray(args)) {
+const calculator  = (calculate, array, init = zero)  => {
+    if (!Array.isArray(array)) {
         return zero;
     }
 
-    return args.reduce(calculate, init);
+    return array.reduce(calculate, init);
 };
 
-const safeSum = args => calculator(calculateSafely(Number.isFinite, sum), args);
-const safeMultiply = args => calculator(calculateSafely(Number.isFinite, multi), args, one);
+const safeSum = array => calculator(calculateSafely(Number.isFinite, sum), array);
+const safeMultiply = array => calculator(calculateSafely(Number.isFinite, multi), array, one);
 
 const isNull = obj => obj === null;
 const isNotNull = obj => !isNull(obj);
